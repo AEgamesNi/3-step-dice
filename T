@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3-Step Board Game</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  #board { margin: 20px 0; }
+  .step { 
+    display: inline-block; 
+    width: 60px; height: 60px; 
+    border: 2px solid #333; 
+    line-height: 60px; 
+    text-align: center; 
+    margin-right: 5px; 
+    font-weight: bold;
+  }
+  .player1 { background: lightblue; }
+  .player2 { background: lightgreen; }
+  #message { margin-top: 20px; font-size: 1.2em; }
+  button { padding: 10px 15px; font-size: 1em; }
+</style>
+</head>
+<body>
+
+<h1>3-Step Board Game</h1>
+
+<div id="board">
+  <div class="step" id="step0">Start</div>
+  <div class="step" id="step1">1</div>
+  <div class="step" id="step2">2</div>
+  <div class="step" id="step3">3</div>
+</div>
+
+<button id="rollBtn">Roll Dice</button>
+
+<div id="message">Player 1's turn</div>
+
+<script>
+  const positions = [0, 0]; // Player 1 and Player 2 positions
+  let playerTurn = 0;
+  const rollBtn = document.getElementById('rollBtn');
+  const message = document.getElementById('message');
+
+  function updateBoard() {
+    for (let i = 0; i <= 3; i++) {
+      document.getElementById('step' + i).classList.remove('player1', 'player2');
+    }
+    document.getElementById('step' + positions[0]).classList.add('player1');
+    document.getElementById('step' + positions[1]).classList.add('player2');
+  }
+
+  function rollDice() {
+    return Math.floor(Math.random() * 6) + 1;
+  }
+
+  rollBtn.addEventListener('click', () => {
+    const roll = rollDice();
+    message.textContent = `Player ${playerTurn + 1} rolled a ${roll}.`;
+
+    positions[playerTurn] += roll;
+    if (positions[playerTurn] > 3) positions[playerTurn] = 3;
+
+    updateBoard();
+
+    if (positions[playerTurn] === 3) {
+      message.textContent = `Player ${playerTurn + 1} wins! 🎉`;
+      rollBtn.disabled = true;
+      return;
+    }
+
+    playerTurn = 1 - playerTurn;
+    message.textContent += ` Player ${playerTurn + 1}'s turn.`;
+  });
+
+  updateBoard();
+</script>
+
+</body>
+</html>
